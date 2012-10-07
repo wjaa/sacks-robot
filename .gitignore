@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+# arquivos maven
+target/**/*
+bin/**/*
