@@ -24,6 +24,7 @@
 					<downloadJavadocs>true</downloadJavadocs>
 					<additionalProjectFacets>
 						<jst.web>2.5</jst.web>
+						<jst.java>1.6</jst.java>
 					</additionalProjectFacets>
 				</configuration>
 			</plugin>
@@ -107,6 +108,14 @@
 			<artifactId>standard</artifactId>
 			<version>1.0.6</version>
 		</dependency>
+		
+		
+		<dependency>
+      		<groupId>junit</groupId>
+      		<artifactId>junit</artifactId>
+      		<version>4.8.1</version>
+      		<scope>test</scope>
+    	</dependency>
             
 	</dependencies>
 	

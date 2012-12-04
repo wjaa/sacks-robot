@@ -50,9 +50,9 @@ public class SacksRobot {
 	
 	
 	static{
-		/*HttpHost proxy = new HttpHost("proxyfiliais.braspress.com.br", 3128);
+		HttpHost proxy = new HttpHost("proxyfiliais.braspress.com.br", 3128);
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-		client.getCredentialsProvider().setCredentials(AuthScope.ANY,new UsernamePasswordCredentials("wagneraraujo-sao","sao1234"));*/
+		client.getCredentialsProvider().setCredentials(AuthScope.ANY,new UsernamePasswordCredentials("wagneraraujo-sao","sao1234"));
 	}
 	
 	public SacksRobot(String [] keyWords, Double valor, FilterType filtertype, OrderType ordertype){
@@ -89,16 +89,16 @@ public class SacksRobot {
 				postParams.add(new BasicNameValuePair("__EVENTVALIDATION",eventValidation));
 				postParams.add(new BasicNameValuePair("__LASTFOCUS",""));
 				postParams.add(new BasicNameValuePair("ddlOrdenacao","relevancia"));
-				postParams.add(new BasicNameValuePair("ddlPaginacao","20"));
+				postParams.add(new BasicNameValuePair("ddlPaginacao","32"));
 				postParams.add(new BasicNameValuePair("tipoVisualizacao","grade"));
 				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(postParams);
 				postLastPage.setEntity(entity);
 				response = client.execute(postLastPage);
 				
 				Integer ultimaPagina = 1;
-				if ( response.getFirstHeader("Location") != null ){
-					String location = response.getFirstHeader("Location").getValue();
-					ultimaPagina = getUltimaPagina(location);
+				if ( response.getEntity().getContent() != null ){
+					
+					ultimaPagina = getUltimaPagina(response.getEntity().getContent());
 				}
 				postLastPage.releaseConnection();
 				/* fim trexo para pegar a ultima pagina*/
@@ -239,9 +239,11 @@ public class SacksRobot {
 	}
 	
 	
-	private Integer getUltimaPagina(String uri){
+	private Integer getUltimaPagina(InputStream page) throws IOException{
+		Document docMoved = Jsoup.parse(page, "UTF-8", "web/Resultado.aspx?q=");
+		
 		Pattern p = Pattern.compile("pagina=[0-9]+");
-		Matcher m = p.matcher(uri);
+		Matcher m = p.matcher(docMoved.html());
 		String paginaStr = "";
 		while(m.find()){
 		    paginaStr = m.group();
@@ -250,8 +252,6 @@ public class SacksRobot {
 		return NumberUtils.isNumber(pagina)? Integer.valueOf(pagina) : 0;
 		
 	}
-	
-	
 	
 	
 }
